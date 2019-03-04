@@ -4,8 +4,7 @@ import com.vladaviekin.serverip.model.AddressConnectModel;
 import com.vladaviekin.serverip.model.NetworkConnectModel;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +13,7 @@ public class NetworkConnectService {
 
     private List<NetworkConnectModel> netConnectList = new ArrayList<>();
 
-    public NetworkConnectModel address(String ip) {
+    public NetworkConnectModel address(String ip) throws IOException, InterruptedException {
         List<NetworkConnectModel> all = all();
         for (NetworkConnectModel ncm: all) {
             if (ncm.getAddress().equals(ip)){
@@ -24,50 +23,45 @@ public class NetworkConnectService {
         return null;
     }
 
-    public List<NetworkConnectModel> all() {
-        String s;
-        Process p;
-        try {
-            p = Runtime.getRuntime().exec("arp -a");
-            BufferedReader br = new BufferedReader(
-                    new InputStreamReader(p.getInputStream()));
+    public List<NetworkConnectModel> all() throws IOException, InterruptedException {
 
-            NetworkConnectModel ncm = null;
-            String address = "";
+        List<String> list = CommandExecutionUtils.run("arp -a");
 
-            while ((s = br.readLine()) != null) {
+        NetworkConnectModel ncm = null;
+        String address = "";
 
-                if ((s.indexOf("Interface") != -1)) {
-                    int begin = s.indexOf(":") + 2;
-                    int ent = s.indexOf("-") - 1;
-                    address = s.substring(begin, ent);
+        for (String s: list) {
+            if ((s.indexOf("Interface") != -1)) {
+                int begin = s.indexOf(":") + 2;
+                int ent = s.indexOf("-") - 1;
+                address = s.substring(begin, ent);
 
-                    if (ncm != null){
-                        netConnectList.add(ncm);
-                    }
+                if (ncm != null){
+                    netConnectList.add(ncm);
+                }
 
-                    ncm = new NetworkConnectModel();
-                    ncm.setAddress(address);
-                } else if ((s.equals("  Internet Address      Physical Address      Type"))) {
-                    //
-                } else if (!s.equals("")) {
-                    String[] a = s.split(" ");
-                    AddressConnectModel acm = new AddressConnectModel();
-                    getAcm(a, acm);
+                ncm = new NetworkConnectModel();
+                ncm.setAddress(address);
+            }
+            else if ((s.equals("  Internet Address      Physical Address      Type"))) {
+                //
+            }
+            else if (!s.equals("")) {
+                String[] a = s.split(" ");
+                AddressConnectModel acm = new AddressConnectModel();
+                getAcm(a, acm);
 
-                    if (addressIp3(address).equals(addressIp3(acm.getInternetAddress())) &&
-                            !addressIp4(acm.getInternetAddress()).equals("255") &&
-                            !addressIp4(acm.getInternetAddress()).equals("0")) {
-                        ncm.addAddress(acm);
-                    }
+                if (addressIp3(address).equals(addressIp3(acm.getInternetAddress())) &&
+                        !addressIp4(acm.getInternetAddress()).equals("255") &&
+                        !addressIp4(acm.getInternetAddress()).equals("0")) {
+                    ncm.addAddress(acm);
                 }
             }
-            p.waitFor();
-            p.destroy();
-        } catch (Exception e) {}
+        }
 
         return netConnectList;
     }
+
 
     private String addressIp4(String address) {
         String[] result = getAddressStrings(address);
@@ -76,7 +70,7 @@ public class NetworkConnectService {
 
     private String addressIp3(String address) {
         String[] result = getAddressStrings(address);
-        return result[2];
+        return result[0] + result[1] + result[2];
     }
 
     private String[] getAddressStrings(String address) {

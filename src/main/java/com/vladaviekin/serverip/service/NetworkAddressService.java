@@ -2,9 +2,9 @@ package com.vladaviekin.serverip.service;
 
 import com.vladaviekin.serverip.model.NetworkAddressModel;
 import com.vladaviekin.serverip.model.NetworkConnectModel;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -25,7 +25,7 @@ public class NetworkAddressService {
         this.networkAddressModelList = new ArrayList<>();
     }
 
-    public NetworkAddressModel name(String name) throws SocketException {
+    public NetworkAddressModel name(String name) throws IOException, InterruptedException {
         List<NetworkAddressModel> networkAddressModels = allNotNull();
         for (NetworkAddressModel nm: networkAddressModels) {
             if (nm.getName().equals(name)){
@@ -43,10 +43,11 @@ public class NetworkAddressService {
         return networkAddressModelList;
     }
 
-    public List<NetworkAddressModel> allNotNull() throws SocketException {
+    public List<NetworkAddressModel> allNotNull() throws IOException, InterruptedException {
         for (NetworkInterface netint : Collections.list(nets)){
             NetworkAddressModel network = network(netint);
             String addressInet4 = network.getAddressInet4();
+
             if (addressInet4 != null &&
                     !network.getAddressInet4().equals("127.0.0.1")){
 
@@ -62,7 +63,7 @@ public class NetworkAddressService {
         return networkAddressModelList;
     }
 
-    public List<String> netNamesNotNull() throws SocketException {
+    public List<String> netNamesNotNull() throws IOException, InterruptedException {
         return getNetName(allNotNull());
     }
 

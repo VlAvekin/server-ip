@@ -1,0 +1,138 @@
+########################################################################################################################
+
+   Проверка настройки хоста:
+   hostnamectl
+
+   Настроика имени хоста:
+   hostnamectl set-hastname server.example.com
+
+    Проверка сети:
+   ifconfig
+
+   Настроика сети:
+   sudo nano /etc/network/interfaces
+        auto lo
+            iface lo inet loopback
+
+        auto ens3
+            iface ens3 inet loopback
+            address 192.168.56.101
+            netmask 255.255.255.0
+
+        auto wlan0
+            iface wlan0 inet loopback
+            address 192.168.137.1
+            netmask 255.255.255.0
+
+
+   Перезапуск сети:
+   sudo systemctl restart networking
+
+   Обновить хранилища данных:
+   sudo apt-get update
+
+   Установка пакетов bind9:
+   sudo apt-get install bind9 bind9utils
+
+   Переход в каталог:
+   cd /etc/bind
+
+   Конфигурация DNS-сервера по зонам:
+   sudo nano /etc/bind/name.conf.local >
+	zone "example.com" IN {
+	type master;
+	file "/etc/bind/forvard.example.com";
+	};
+
+	zone "137.168.192.in-addr.arpa" IN {
+	type master;
+	file "/etc/bind/reverse.example.com";
+	};
+
+
+   sudo cp db.local forward.example.com
+   sudo nano /etc/bind/forward.example.com
+	...
+	... SOA server.example.com. root.server.example.com. (
+	...
+	    @ IN NS server.example.com.
+	    @ IN PTR example.com.
+	    server IN A 192.168.137.1
+	    host IN A 192.168.137.1
+	    client IN A 192.168.137.2
+	    www IN A 192.168.137.2
+	    1   IN PTR server.example.com.
+	    2   IN PTR client.example.com.
+
+    Настройки зон, просмотер:
+    sudo name-checkconf -z /etc/bind/named.conf
+    Доржни отобразиться настройки зон.
+
+    sudo name-checkconf forward /etc/bind/forward.example.com
+      результат
+        com
+        zone forward/IN loaded serial 2
+        OK
+
+    sudo name-checkconf reverse /etc/bind/reverse.example.com
+      результат
+            com
+            zone reverse/IN loaded serial 2
+            OK
+   
+    sudo systemctl start bind9
+
+    sudo chmod -R 755 /etc/bind
+
+    sudo systemctl restart bind9
+
+
+    Настройка фаервола
+
+    Прверка статуса:
+    sudo ufw status
+
+    sudo ufw allow bind9
+
+    sudo nano /etc/network/interfaces
+            auto lo
+                iface lo inet loopback
+
+            auto ens3
+                iface ens3 inet loopback
+                address 192.168.56.101
+                netmask 255.255.255.0
+
+            auto wlan0
+                iface wlan0 inet loopback
+                address 192.168.137.1
+                netmask 255.255.255.0
+                dns-search example.com
+                dns-nameserver 192.168.137.1
+
+    sudo systemctl restart networking
+
+    sudo nano /etc/resolv.conf
+        nameserver 192.168.137.1
+        search example.com
+
+    sudo systemctl restart networking
+    sudo systemctl restart NetworkManager
+
+
+    Проверка:
+    ping server/host/client
+    nslookup server/host/client
+
+########################################################################################################################
+
+   Управления на стороне сервера:
+
+   закрить
+       iptables -I INPUT -s 192.168.244.134 -j DROP
+
+   открить
+       iptables -I INPUT -s 192.168.244.134 -j ACCEPT
+
+   для сохранения изменений
+        service iptables save

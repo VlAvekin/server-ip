@@ -2,8 +2,6 @@ package com.vladaviekin.serverip.model;
 
 import lombok.Data;
 
-import java.util.Objects;
-
 @Data
 public class AddressConnectModel {
 
