@@ -43,6 +43,10 @@ Post /
 ```
 
 <hr>
+DNS server setting is described in the file
+
+[DNS_Server_Setting.txt](script/DNS_Server_Setting.txt)
+<hr>
 
 To run the program, examine the deploy.sh file.
 
