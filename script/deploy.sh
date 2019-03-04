@@ -14,12 +14,12 @@ if [ "which java" ]; then
 else
     sudo add-apt-repository ppa:webupd8team/java
     sudo apt-get update
-    sudo apt-get install oracle-java8-installer
+    sudo apt-get install oracle-java11-installer
 
     export PATH="$PATH:$JAVA_HOME/bin:$JRE_HOME/bin"
-    export JAVA_HOME=/usr/lib/jvm/java-8-oracle
-    export JDK_HOME=/usr/lib/jvm/java-8-oracle
-    export JRE_HOME=/usr/lib/jvm/java-8-oracle/jre
+    export JAVA_HOME=/usr/lib/jvm/java-11-oracle
+    export JDK_HOME=/usr/lib/jvm/java-11-oracle
+    export JRE_HOME=/usr/lib/jvm/java-11-oracle/jre
 fi
 # JAVA END
 

@@ -44,6 +44,40 @@ Post /
 
 <hr>
 
+To run the program, examine the deploy.sh file.
+
+[deploy.sh](script/deploy.sh)
+
+for settings command
+```
+    bash deploy.sh -config
+```
+command to start 
+```
+    bash deploy.sh -start
+```
+command to stop 
+```
+    bash deploy.sh -stop
+```
+
+help
+```
+ HELPER
+ Parameters
+ 
+    ./deploy.sh -start       | Start server"
+    ./deploy.sh -stop        | Stop server"
+    ./deploy.sh -restart     | Restart server"
+    ./deploy.sh -status      | Status server"; echo
+    ./deploy.sh -package     | Maven package project"
+    ./deploy.sh -update/-up  | Re build project"; echo
+    ./deploy.sh -config      | Check installed software"
+    ./deploy.sh -h           | Help"
+    ./deploy.sh -help        | Help"
+```
+<hr>
+
 ![](image/Capture-1.PNG)
 
 ![](image/Capture-2.PNG)
