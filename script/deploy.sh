@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Linux deploy avenmes linux server
+# Linux deploy linux server
 #*************************************************************
 param=$1
 len=$(xset q | grep -Po 'LED mask:\s*\K\d+')
@@ -26,51 +26,51 @@ fi
 # package project
 mypackage=`pwd`; cd ~; package=`pwd`; cd $mypackage;
 
-if [ -e "$package/avenmes/" ]; then
+if [ -e "$package/server-ip/" ]; then
         if [[ "$param" == "-config" ]] ||  [[ "$2" == "0" ]]; then
         echo "Package avenmes exist..."
         fi
 else
-        mkdir ~/avenmes
+        mkdir ~/server-ip
 fi
 
-if [ -e "$package/avenmes/avenmes-1.0-SNAPSHOT.jar" ]; then
+if [ -e "$package/server-ip/server-ip-0.0.1-SNAPSHOT.jar" ]; then
         if [[ "$param" == "-config" ]] || [[ "$2" == "0" ]]; then
-        echo "File avenmes-1.0-SNAPSHOT.jar exist..."
+        echo "File server-ip-1.0-SNAPSHOT.jar exist..."
         fi
 else
-        echo 'avenmes-1.0-SNAPSHOT.jar > copy files...'
-        cp target/avenmes-1.0-SNAPSHOT.jar $package/avenmes/
-        ls ~/avenmes/
+        echo 'server-ip-0.0.1-SNAPSHOT.jar > copy files...'
+        cp target/server-ip-0.0.1-SNAPSHOT.jar $package/server-ip/
+        ls ~/server-ip/
 fi
 
-if [ -e "$package/avenmes/deploy.sh" ]; then
+if [ -e "$package/server-ip/deploy.sh" ]; then
         if [[ "$param" == "-config" ]] || [[ "$2" == "0" ]]; then
         echo "File deploy.sh exist..."
         fi
 else
         echo 'deploy.sh > copy files...'
         cp script/deploy.sh ~/avenmes/
-        chmod +x ~/avenmes/deploy_AWS.sh
-        ls ~/avenmes/
+        chmod +x ~/server-ip/deploy_AWS.sh
+        ls ~/server-ip/
 fi
 
-if [ -e "$package/avenmes/log.txt" ]; then
+if [ -e "$package/server-ip/log.txt" ]; then
         if [[ "$param" == "-config" ]] || [[ "$2" == "0" ]]; then
         echo "File log.txt exist..."
         fi
 else
         echo 'new files log.txt...'
-        touch ~/avenmes/log.txt
-        ls ~/avenmes/
+        touch ~/server-ip/log.txt
+        ls ~/server-ip/
 fi
 #*************************************************************
 
 # UPDATE
 if [[ "$param" == "-update" ]] || [[ "$param" == "-up" ]]; then
     echo "UPDATE..."
-    rm -rf ~/avenmes
-    bash script/deploy.sh -config 0
+    rm -rf ~/server-ip
+    bash server-ip/deploy.sh -config 0
 fi
 # PACKAGE END
 
@@ -99,7 +99,7 @@ fi
 if [[ "$param" == "-restart" ]]; then
     echo "Restart server..."
     pgrep java | xargs kill -9
-    nohup java -jar avenmes-1.0-SNAPSHOT.jar > log.txt &
+    nohup java -jar server-ip-0.0.1-SNAPSHOT.jar > log.txt &
 fi
 # RESTART END
 
