@@ -84,7 +84,7 @@ fi
 if [[ "$param" == "-start" ]]; then
     echo "Start server..."
     mvn clean package
-    nohup java -jar avenmes-1.0-SNAPSHOT.jar > log.txt &
+    nohup java -jar server-ip-0.0.1-SNAPSHOT.jar > log.txt &
 fi
 # START END
 
