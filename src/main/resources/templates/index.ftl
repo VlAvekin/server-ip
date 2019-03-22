@@ -46,11 +46,13 @@
                     <td>${addressConnectMode.type}</td>
                     <td>
                         <div class="btn-group" role="group" aria-label="Basic example">
-                            <form method="post" action="/?status=1">
-                                <button type="submit" class="btn btn-secondary">Connect</button>
+                            <form method="post" action="/?status=1&name=${name}">
+                                <button type="submit" class="btn btn-secondary
+                                ${(connect??)?string('disabled', '')}">Connect</button>
                             </form>
-                            <form method="post" action="/?status=0">
-                                <button type="submit" class="btn btn-secondary">Disconnect</button>
+                            <form method="post" action="/?status=0&name=${name}">
+                                <button type="submit" class="btn btn-secondary
+                                ${(disconnect??)?string('disabled', '')}">Disconnect</button>
                             </form>
                         </div>
                     </td>

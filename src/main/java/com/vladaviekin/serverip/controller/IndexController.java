@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -26,6 +27,7 @@ public class IndexController {
 
     @GetMapping("/")
     public String index(@RequestParam(required = false) String name,
+                        @RequestParam(required = false) String activ,
             Model model) throws IOException, InterruptedException {
 
         List<String> networkNameList = new ArrayList<>();
@@ -47,23 +49,35 @@ public class IndexController {
             model.addAttribute("name", "all");
         }
 
+
+        if (activ != null){
+            if (activ.equals("con")){
+                model.addAttribute("disconnect", "disconnect");
+                model.addAttribute("connect", null);
+            }
+
+            if (activ.equals("dis")){
+                model.addAttribute("connect", "connect");
+                model.addAttribute("disconnect", null);
+            }
+        }
+
         return "index";
     }
 
     @PostMapping("/")
-    public String networkConnDiscon(@RequestParam String status,
+    public String networkConnDiscon(@RequestParam String name,
+                                    @RequestParam String status,
                                     Model model) throws IOException, InterruptedException {
 
-        if (status.equals("1")){
-            //netIpManager.connect();
-            System.out.println("Con");
+        if (status.equals("1")) {
+            netIpManager.connect();
+            return "redirect:/?activ=dis&name=" + name;
         }
-
-        if (status.equals("0")){
-            //netIpManager.disconnect();
-            System.out.println("DisCon");
+        if (status.equals("0")) {
+            netIpManager.disconnect();
+            return "redirect:/?activ=con&name=" + name;
         }
-
         return "redirect:/";
     }
 }

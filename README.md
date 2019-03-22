@@ -43,6 +43,14 @@ Post /
 ```
 
 <hr>
+Download
+
+```
+ git clone https://github.com/VlAvekin/server-ip.git
+ cp /home/pi/server_ip/server-ip/script/server-ip.sh /home/pi/server_ip
+```
+
+<hr>
 DNS server setting is described in the file
 
 [DNS_Server_Setting.txt](script/DNS_Server_Setting.txt)
