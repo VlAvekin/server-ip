@@ -39,14 +39,15 @@ fi
 # JAVA END
 
 # MAVEN
-if [ "which java" ]; then
+maven=$(which mvn)
+if [ $maven ]; then
     if [[ "$param" == "-config" ]] &&  [[ "$2" != "0" ]]; then
     echo "maven exist..."
     mvn -version
     fi
 else
     echo "maven download..."
-    sudo apt install maven
+    sudo apt-get install maven
 fi
 # MAVEN END
 #***********************************************************************************************************************
@@ -62,7 +63,10 @@ fi
 # START
 if [[ "$param" == "-start" ]]; then
     echo "Start server..."
-    mvn clean package
+    #mvn clean package
+    iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+    iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+    iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
     nohup java -jar server-ip-0.0.1-SNAPSHOT.jar > log.txt &
 fi
 # START END

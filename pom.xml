@@ -5,7 +5,7 @@
 
     <groupId>com.vladaviekin</groupId>
     <artifactId>server-ip</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1-beta</version>
     <name>server-ip</name>
     <description>Demo project</description>
 

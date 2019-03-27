@@ -126,13 +126,23 @@
 
 ########################################################################################################################
 
+    sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+    sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+    sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
+
    Управления на стороне сервера:
 
    закрить
-       iptables -I INPUT -s 192.168.244.134 -j DROP
+       sudo iptables -I FORWARD -s 192.168.220.54 -i wlan0 -j DROP
+
 
    открить
-       iptables -I INPUT -s 192.168.244.134 -j ACCEPT
+       sudo iptables -I FORWARD -s 192.168.220.54 -i wlan0 -j ACCEPT
+
 
    для сохранения изменений
         service iptables save
+
+        WhatIsTime (192.168.220.54) at 90:21:81:ec:bc:83 [ether] on wlan0
+        ? (192.168.1.101) at 94:39:e5:75:33:15 [ether] on eth0
+        ? (192.168.1.1) at 20:aa:4b:81:e9:83 [ether] on eth0
