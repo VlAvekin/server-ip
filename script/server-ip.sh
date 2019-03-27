@@ -12,7 +12,7 @@ if [[  "$param" == "-d"  ]] || [[  "$param" == "-download"  ]]; then
     cd $pac
     rm -rf server-ip
     git clone https://github.com/VlAvekin/server-ip.git
-    cp /home/pi/server_ip/server-ip/script/server-ip.sh /home/pi/server_ip
+    cp /home/pi/server_ip/server-ip/script/server-ip.sh /home/pi/server_ip; cd /home/pi/server_ip/
 fi
 # DOWNLOAD END
 #***********************************************************************************************************************
@@ -27,14 +27,9 @@ if [ "which java" ]; then
     jdc -version
     fi
 else
-    sudo add-apt-repository ppa:webupd8team/java
     sudo apt-get update
-    sudo apt-get install oracle-java11-installer
+    sudo apt-get install -y oracle-java8-jdk
 
-    export PATH="$PATH:$JAVA_HOME/bin:$JRE_HOME/bin"
-    export JAVA_HOME=/usr/lib/jvm/java-11-oracle
-    export JDK_HOME=/usr/lib/jvm/java-11-oracle
-    export JRE_HOME=/usr/lib/jvm/java-11-oracle/jre
 fi
 # JAVA END
 
@@ -47,16 +42,28 @@ if [ $maven ]; then
     fi
 else
     echo "maven download..."
-    sudo apt-get install maven
+    sudo apt-get install -y maven
 fi
 # MAVEN END
+
+# GIT
+git=$(which mvn)
+if [ $git ]; then
+    if [[ "$param" == "-config" ]] &&  [[ "$2" != "0" ]]; then
+    echo "git exist..."
+    git --version
+    fi
+else
+    echo "git download..."
+    sudo apt-get install -y git-core
+fi
+
+# GIT END
 #***********************************************************************************************************************
 
 # PACKAGE
 if [[ "$param" == "-package" ]]; then
-    cd $pac/server-ip
     mvn clean package
-    cp target/server-ip-0.0.1-SNAPSHOT.jar $pac
 fi
 # PACKAGE END
 
@@ -67,7 +74,7 @@ if [[ "$param" == "-start" ]]; then
     iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
     iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
     iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
-    nohup java -jar server-ip-0.0.1-SNAPSHOT.jar > log.txt &
+    nohup java -jar target/server-ip-0.0.1-beta.jar > log.txt &
 fi
 # START END
 

@@ -7,15 +7,15 @@ import java.io.IOException;
 @Service
 public class NetworkIpManagementService {
 
-    private final String CONNECT_IP = "iptables -I FORWARD -s 192.168.220.54 -i wlan0 -j ACCEPT;";
-    private final String DISCONNECT_IP = "iptables -I FORWARD -s 192.168.220.54 -i wlan0 -j DROP;";
+    private final String CONNECT_IP = "iptables -I FORWARD -s %s -i wlan0 -j ACCEPT;";
+    private final String DISCONNECT_IP = "iptables -I FORWARD -s %s -i wlan0 -j DROP;";
     private final String SAVE = "service iptables save;";
 
-    public void connect() throws IOException, InterruptedException {
-        CommandExecutionUtils.run(CONNECT_IP);
+    public void connect(final String ip) throws IOException, InterruptedException {
+        CommandExecutionUtils.run(String.format(CONNECT_IP, ip));
     }
 
-    public void disconnect() throws IOException, InterruptedException {
-        CommandExecutionUtils.run(DISCONNECT_IP);
+    public void disconnect(final String ip) throws IOException, InterruptedException {
+        CommandExecutionUtils.run(String.format(DISCONNECT_IP, ip));
     }
 }

@@ -25,10 +25,12 @@
                 <td>
                     <div class="btn-group" role="group" aria-label="Basic example">
                         <form method="post" action="/?status=1">
+                            <input type="hidden" name="ip" value="<#if addressConnect.internetAddress??>{addressConnect.internetAddress}</#if>
                             <button type="submit" class="btn btn-secondary
                             ${(connect??)?string('disabled', '')}">Connect</button>
                         </form>
                         <form method="post" action="/?status=0">
+                            <input type="hidden" name="ip" value="<#if addressConnect.internetAddress??>{addressConnect.internetAddress}</#if>
                             <button type="submit" class="btn btn-secondary
                             ${(disconnect??)?string('disabled', '')}">Disconnect</button>
                         </form>

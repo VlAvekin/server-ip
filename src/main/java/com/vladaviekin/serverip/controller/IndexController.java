@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,14 +51,15 @@ public class IndexController {
 
     @PostMapping("/")
     public String networkConnDisconn(@RequestParam String status,
+                                     @Valid String ip,
                                      Model model) throws IOException, InterruptedException {
 
         if (status.equals("1")) {
-            netIpManager.connect();
+            netIpManager.connect(ip);
             return "redirect:/?status=1";
         }
         if (status.equals("0")) {
-            netIpManager.disconnect();
+            netIpManager.disconnect(ip);
             return "redirect:/?status=0";
         }
         return "redirect:/";
